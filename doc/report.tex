@@ -1,9 +1,50 @@
-\documentclass{report}
+\documentclass[twocolumn]{report}
+\usepackage{listings}
+\lstset{language=Java,basicstyle=\ttfamily\scriptsize}
 
 \begin{document}
 \title{Java Lambda Expression Source to Source Compiler}
 \author{Kurt McAlpine}
 \date{24 April 2015}
 \maketitle
+
+\chapter{Introduction}
+An example use of my implementation of lambda expressions in java is to
+instantiate an anonymous class with exactly one method to be overriden. Using
+lambda expressions it makes the code much cleaner and more concise.
+
+For example this code:
+\begin{lstlisting}
+interface Addition {
+  int sum(int a, int b);
+}
+
+public static void main(String[] args) {
+  Addition addition = new Addition() {
+
+    @Override
+    public int sum(int a, int b) {
+      return a + b;
+    }
+  };
+  System.out.println(addition.sum(2, 5));
+}
+\end{lstlisting}
+Would be written more consicely, like this:
+\begin{lstlisting}
+interface Addition {
+  int sum(int a, int b);
+}
+
+public static void main(String[] args) {
+  Addition addition = (int a, int b) -> {
+    return a + b;
+  }
+  System.out.println(addition.sum(2, 5));
+}
+\end{lstlisting}
+
+
+
 
 \end{document}
