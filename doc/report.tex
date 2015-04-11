@@ -1,6 +1,20 @@
 \documentclass[twocolumn]{report}
 \usepackage{listings}
-\lstset{language=Java,basicstyle=\ttfamily\scriptsize}
+\usepackage{color}
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+ 
+\lstset{language=Java,
+basicstyle=\ttfamily\scriptsize,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
 
 \begin{document}
 \title{Java Lambda Expression Source to Source Compiler}
@@ -39,9 +53,14 @@ interface Addition {
 public static void main(String[] args) {
   Addition addition = (int a, int b) -> {
     return a + b;
-  }
+  };
   System.out.println(addition.sum(2, 5));
 }
+\end{lstlisting}
+More concise:
+\begin{lstlisting}
+  Addition addition = (int a, int b) -> return a + b;
+  System.out.println(addition.sum(2, 5));
 \end{lstlisting}
 
 
