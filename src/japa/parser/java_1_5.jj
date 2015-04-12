@@ -1103,6 +1103,7 @@ TOKEN :
 | < RSIGNEDSHIFTASSIGN: ">>=" >
 | < RUNSIGNEDSHIFTASSIGN: ">>>=" >
 | < ELLIPSIS: "..." >
+| < LAMBDA: "->" >
 }
 
 /* >'s need special attention due to generics syntax. */
@@ -1477,7 +1478,9 @@ Expression VariableInitializer():
   (
 	  ret = ArrayInitializer()
 	|
-	  ret = Expression()
+	LOOKAHEAD(Expression())   ret = Expression()
+	|
+	LOOKAHEAD(LambdaExpression())   ret = LambdaExpression()
   )
   { return ret;}
 }
@@ -2465,6 +2468,15 @@ Statement BlockStatement():
 	  ret = Statement()
   )
   { return ret; }
+}
+
+LambdaExpr LambdaExpression():
+{
+	List params;
+}
+{
+  params = FormalParameters() <LAMBDA> BlockStatement()
+  { return new LambdaExpr(((Parameter) params.get(0)).getBeginLine(), ((Parameter) params.get(0)).getEndLine()); }
 }
 
 VariableDeclarationExpr VariableDeclarationExpression():

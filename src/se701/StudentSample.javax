@@ -2,7 +2,14 @@ package se701;
 
 public class StudentSample {
 	
-	public static void main(String[] args) {
-		
+	interface Addition {
+		int sum ( int a , int b );
+	}
+	
+	public static void main ( String [] args ) {
+		Addition addition = ( int a , int b ) -> {
+			return a + b ;
+		};
+		System . out . println ( addition . sum (2 , 5));
 	}
 }
