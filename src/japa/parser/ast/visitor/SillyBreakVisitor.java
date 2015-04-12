@@ -64,6 +64,7 @@ import japa.parser.ast.expr.FieldAccessExpr;
 import japa.parser.ast.expr.InstanceOfExpr;
 import japa.parser.ast.expr.IntegerLiteralExpr;
 import japa.parser.ast.expr.IntegerLiteralMinValueExpr;
+import japa.parser.ast.expr.LambdaExpr;
 import japa.parser.ast.expr.LongLiteralExpr;
 import japa.parser.ast.expr.LongLiteralMinValueExpr;
 import japa.parser.ast.expr.MarkerAnnotationExpr;
@@ -1303,4 +1304,11 @@ public final class SillyBreakVisitor implements VoidVisitor<Object> {
         printer.print(n.getContent());
         printer.printLn("*/");
     }
+
+	@Override
+	public void visit(LambdaExpr n, Object arg) {
+		printer.print("/*");
+        printer.print(n.getContent());
+        printer.printLn("*/");
+	}
 }

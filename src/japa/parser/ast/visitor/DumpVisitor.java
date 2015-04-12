@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Júlio Vilmar Gesser.
+ * Copyright (C) 2007 Jï¿½lio Vilmar Gesser.
  * 
  * This file is part of Java 1.5 parser and Abstract Syntax Tree.
  *
@@ -64,6 +64,7 @@ import japa.parser.ast.expr.FieldAccessExpr;
 import japa.parser.ast.expr.InstanceOfExpr;
 import japa.parser.ast.expr.IntegerLiteralExpr;
 import japa.parser.ast.expr.IntegerLiteralMinValueExpr;
+import japa.parser.ast.expr.LambdaExpr;
 import japa.parser.ast.expr.LongLiteralExpr;
 import japa.parser.ast.expr.LongLiteralMinValueExpr;
 import japa.parser.ast.expr.MarkerAnnotationExpr;
@@ -428,6 +429,24 @@ public final class DumpVisitor implements VoidVisitor<Object> {
             printer.print(" = ");
             n.getInit().accept(this, arg);
         }
+    }
+    
+    public void visit(LambdaExpr n, Object arg) {
+    	printer.print("(");
+        List<Parameter> params = n.getParameters();
+        if (params.size() == 0) {
+        } else if (params.size() == 1) {
+        	params.get(0).accept(this, arg);
+        } else {
+        	params.get(0).accept(this, arg);
+        	for (int i = 1; i < params.size(); i++) {
+        		printer.print(", ");
+        		params.get(i).accept(this, arg);
+        	}
+
+        }
+        printer.print(") -> ");
+        n.getBlock().accept(this, arg);
     }
 
     public void visit(VariableDeclaratorId n, Object arg) {

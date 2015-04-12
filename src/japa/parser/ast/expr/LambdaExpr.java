@@ -21,6 +21,12 @@
  */
 package japa.parser.ast.expr;
 
+import java.util.List;
+
+import japa.parser.ast.BlockComment;
+import japa.parser.ast.body.Parameter;
+import japa.parser.ast.stmt.BlockStmt;
+import japa.parser.ast.stmt.Statement;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
 
@@ -29,16 +35,14 @@ import japa.parser.ast.visitor.VoidVisitor;
  */
 public final class LambdaExpr extends Expression {
 
-    //private final int modifiers;
+    private final List parameters;
+    
+    private final Statement blockStatement;
 
-    //private final List<AnnotationExpr> annotations;
-
-    //private final Type type;
-
-    //private final List<VariableDeclarator> vars;
-
-    public LambdaExpr(int line, int column) {
+    public LambdaExpr(int line, int column, List params, Statement block) {
         super(line, column);
+        parameters = params;
+        blockStatement = block;
     }
 
     @Override
@@ -50,4 +54,24 @@ public final class LambdaExpr extends Expression {
     public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
         return v.visit(this, arg);
     }
+
+	public List<Parameter> getParameters() {
+		return (List<Parameter>) parameters;
+	}
+	
+	public BlockStmt getBlock() {
+		return (BlockStmt) blockStatement;
+	}
+
+	public String getContent() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		for (Object o : parameters) {
+			sb.append(((Parameter) o).getType().toString());
+		}
+		sb.append(")");
+		sb.append("->");
+		//sb.append(((BlockStmt)blockStatement).get)
+		return null;
+	}
 }

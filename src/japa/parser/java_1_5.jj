@@ -2473,10 +2473,13 @@ Statement BlockStatement():
 LambdaExpr LambdaExpression():
 {
 	List params;
+	Statement block;
 }
 {
-  params = FormalParameters() <LAMBDA> BlockStatement()
-  { return new LambdaExpr(((Parameter) params.get(0)).getBeginLine(), ((Parameter) params.get(0)).getEndLine()); }
+  params = FormalParameters() <LAMBDA>  block = BlockStatement()
+  { return new LambdaExpr(((Parameter) params.get(0)).getBeginLine(),
+  ((Parameter) params.get(0)).getEndLine(),
+  params, block); }
 }
 
 VariableDeclarationExpr VariableDeclarationExpression():

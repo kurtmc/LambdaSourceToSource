@@ -23,8 +23,8 @@ public class A2Compiler {
 		CompilationUnit ast = parser.CompilationUnit();
 		
 		// perform visit 1...
-		SillyBreakVisitor semanticsVisitor = new SillyBreakVisitor();
-		ast.accept(semanticsVisitor, null);
+		//SillyBreakVisitor semanticsVisitor = new SillyBreakVisitor();
+		//ast.accept(semanticsVisitor, null);
 		
 		// perform visit 2... etc etc 
 		// ...
