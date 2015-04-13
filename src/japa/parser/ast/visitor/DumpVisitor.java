@@ -432,6 +432,10 @@ public final class DumpVisitor implements VoidVisitor<Object> {
     }
     
     public void visit(LambdaExpr n, Object arg) {
+    	printer.printLn("new " + n.getTypeString() + "() {");
+		printer.indent();
+    	printer.printLn("@Override");
+    	printer.print("public " + n.getReturnTypeString() + " " + n.getMethodNameString());
     	printer.print("(");
         List<Parameter> params = n.getParameters();
         if (params.size() == 0) {
@@ -445,8 +449,11 @@ public final class DumpVisitor implements VoidVisitor<Object> {
         	}
 
         }
-        printer.print(") -> ");
+        printer.print(") ");
         n.getBlock().accept(this, arg);
+        printer.printLn("");
+        printer.unindent();
+        printer.print("}");
     }
 
     public void visit(VariableDeclaratorId n, Object arg) {

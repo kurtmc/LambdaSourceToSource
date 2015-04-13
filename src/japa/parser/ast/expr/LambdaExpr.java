@@ -64,14 +64,18 @@ public final class LambdaExpr extends Expression {
 	}
 
 	public String getContent() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("(");
-		for (Object o : parameters) {
-			sb.append(((Parameter) o).getType().toString());
-		}
-		sb.append(")");
-		sb.append("->");
-		//sb.append(((BlockStmt)blockStatement).get)
 		return null;
+	}
+
+	public String getTypeString() {
+		return "TypeName";
+	}
+
+	public String getReturnTypeString() {
+		return "ReturnType";
+	}
+
+	public String getMethodNameString() {
+		return "MethodName";
 	}
 }
