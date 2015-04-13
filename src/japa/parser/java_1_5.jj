@@ -2477,9 +2477,12 @@ LambdaExpr LambdaExpression():
 }
 {
   params = FormalParameters() <LAMBDA>  block = BlockStatement()
-  { return new LambdaExpr(((Parameter) params.get(0)).getBeginLine(),
-  ((Parameter) params.get(0)).getEndLine(),
-  params, block); }
+  {
+	  int beginLine = ((Parameter) params.get(0)).getBeginLine();
+	  int beginColumn = ((Parameter) params.get(0)).getBeginColumn();
+	  
+	  return new LambdaExpr(beginLine, beginColumn, params, block, "lambdaType", "methodReturnType", "methodName");
+  }
 }
 
 VariableDeclarationExpr VariableDeclarationExpression():
