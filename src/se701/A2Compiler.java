@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.visitor.CreateScopesVisitor;
 import japa.parser.ast.visitor.SillyBreakVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
 
@@ -21,6 +22,10 @@ public class A2Compiler {
 		// parse the input, performs lexical and syntatic analysis
 		JavaParser parser = new JavaParser(new FileReader(file));
 		CompilationUnit ast = parser.CompilationUnit();
+		
+		// Create scopes
+		CreateScopesVisitor createScopesVisitor = new CreateScopesVisitor();
+		ast.accept(createScopesVisitor, null);
 		
 		// perform visit 1...
 		//SillyBreakVisitor semanticsVisitor = new SillyBreakVisitor();
