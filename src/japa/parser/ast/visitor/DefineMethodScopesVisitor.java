@@ -210,10 +210,10 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 		
 		Symbol returnType = (ClassSymbol) currentScope.resolve(n.getType().toString());
 		if (returnType == null)
-			throw new A2SemanticsException("Class not defined: " + n.getType().toString());
+			throw new A2SemanticsException("Class not defined: " + n.getType().toString() + ".", n);
 			
 		if (!(returnType instanceof ClassSymbol))
-			throw new A2SemanticsException("Class not defined: " + n.getType().toString());
+			throw new A2SemanticsException("Invalid use of symbol, this should only be a class or primitive.", n);
 		
 		methodSymbol.setReturnType((ClassSymbol) returnType);
 				
