@@ -130,9 +130,15 @@ public final class CreateClassScopesVisitor implements VoidVisitor<Object> {
 		currentScope = new JavaxSymbol("JavaxFile");
 		
 		// hard code primitives
-		currentScope.define(new ClassSymbol("int", currentScope));
 		currentScope.define(new ClassSymbol("void", currentScope));
-
+		currentScope.define(new ClassSymbol("byte", currentScope));
+		currentScope.define(new ClassSymbol("short", currentScope));
+		currentScope.define(new ClassSymbol("int", currentScope));
+		currentScope.define(new ClassSymbol("long", currentScope));
+		currentScope.define(new ClassSymbol("float", currentScope));
+		currentScope.define(new ClassSymbol("double", currentScope));
+		currentScope.define(new ClassSymbol("boolean", currentScope));
+		currentScope.define(new ClassSymbol("char", currentScope));
 
 		// set scope into CompilationUnit
 		SemanticData data = new SemanticData("JavaxFile");
