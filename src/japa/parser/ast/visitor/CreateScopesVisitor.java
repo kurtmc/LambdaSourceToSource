@@ -108,12 +108,11 @@ import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 import se701.symtab.ClassSymbol;
 import se701.symtab.JavaxSymbol;
-import se701.symtab.MethodSymbol;
 import se701.symtab.Scope;
 import se701.symtab.SemanticData;
 
 /**
- * @author Julio Vilmar Gesser
+ * The goal of this vistor is to define all of the classes and create scopes for them.
  */
 
 public final class CreateScopesVisitor implements VoidVisitor<Object> {
@@ -195,8 +194,26 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(EnumDeclaration n, Object arg) {
-
+		// create a new ClassSymbol scope and define it in the current scope
+		ClassSymbol classSymbol =  new ClassSymbol(n.getName(), currentScope);		
+		currentScope.define(classSymbol);
 		
+		// The new scope becomes the currentScope 
+		currentScope = classSymbol;
+		
+		// Set the class scope into ClassOrInterfaceDeclaration
+		SemanticData data = new SemanticData(n.getName());
+		data.setScope(currentScope);		
+		n.setData(data);
+		
+		// Accept the body
+		if (n.getMembers() != null)
+			for (BodyDeclaration i : n.getMembers()) {
+				i.accept(this, arg);
+			}
+		
+		// pop the scope to the enclosing scope 
+		currentScope = currentScope.getEnclosingScope();		
 	}
 
 	@Override
@@ -231,18 +248,10 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(VariableDeclarator n, Object arg) {
-        n.getId().accept(this, arg);
-        if (n.getInit() != null) {
-            n.getInit().accept(this, arg);
-        }
 	}
 
 	@Override
 	public void visit(VariableDeclaratorId n, Object arg) {
-		// set scope
-		SemanticData data = new SemanticData(n.getName());
-		data.setScope(currentScope);
-		n.setData(data);
 	}
 
 	@Override
@@ -253,25 +262,6 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(MethodDeclaration n, Object arg) {
-		// create a new MethodSymbol scope and define it in the current scope
-		MethodSymbol methodSymbol = new MethodSymbol(n.getName(), currentScope);
-		currentScope.define(methodSymbol);
-		
-		// The new scope becomes the currentScope
-		currentScope = methodSymbol;
-		
-		// Set the class scope into MethodDeclaration
-		SemanticData data = new SemanticData(n.getName());
-		data.setScope(currentScope);
-		n.setData(data);
-		
-		// Accept the block
-		BlockStmt block = n.getBody();
-		if (block != null)
-			block.accept(this, arg);
-		
-		// pop the scope to the enclosing scope
-		currentScope = currentScope.getEnclosingScope();
 	}
 
 	@Override
@@ -494,9 +484,6 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(VariableDeclarationExpr n, Object arg) {
-		for (VariableDeclarator i : n.getVars()) {
-			i.accept(this, arg);
-		}
 	}
 
 	@Override
@@ -568,7 +555,6 @@ public final class CreateScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(ExpressionStmt n, Object arg) {
-		n.getExpression().accept(this, arg);
 	}
 
 	@Override
