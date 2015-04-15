@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.visitor.CreateScopesVisitor;
+import japa.parser.ast.visitor.CreateClassScopesVisitor;
 import japa.parser.ast.visitor.SillyBreakVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
 
@@ -24,7 +24,7 @@ public class A2Compiler {
 		CompilationUnit ast = parser.CompilationUnit();
 		
 		// Create scopes
-		CreateScopesVisitor createScopesVisitor = new CreateScopesVisitor();
+		CreateClassScopesVisitor createScopesVisitor = new CreateClassScopesVisitor();
 		ast.accept(createScopesVisitor, null);
 		
 		// perform visit 1...
