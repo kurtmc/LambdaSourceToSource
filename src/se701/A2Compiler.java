@@ -9,6 +9,7 @@ import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.visitor.CreateClassScopesVisitor;
+import japa.parser.ast.visitor.DefineMethodScopesVisitor;
 import japa.parser.ast.visitor.SillyBreakVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
 
@@ -23,9 +24,15 @@ public class A2Compiler {
 		JavaParser parser = new JavaParser(new FileReader(file));
 		CompilationUnit ast = parser.CompilationUnit();
 		
-		// Create scopes
+		// Create class scopes and define them
 		CreateClassScopesVisitor createScopesVisitor = new CreateClassScopesVisitor();
 		ast.accept(createScopesVisitor, null);
+		
+		// Define methods
+		DefineMethodScopesVisitor defineMethodScopesVisitor = new DefineMethodScopesVisitor();
+		ast.accept(defineMethodScopesVisitor, null);
+		
+		
 		
 		// perform visit 1...
 		//SillyBreakVisitor semanticsVisitor = new SillyBreakVisitor();
