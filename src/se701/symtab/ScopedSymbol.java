@@ -35,6 +35,11 @@ public abstract class ScopedSymbol extends Symbol implements Scope {
 	
 	@Override
 	public Symbol resolve(String name) {
+		// if the symbol is an array symbol, example String[] remove the [] from the end
+		while (name.contains("[]")) {
+			name = name.substring(0, name.length() - 2);
+		}
+					
 		// if the symbol exists in the current scope, return it
 		Symbol s = symbols.get(name);
 		if (s != null)

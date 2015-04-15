@@ -208,14 +208,23 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 		
 		MethodSymbol methodSymbol = new MethodSymbol(n.getName(), currentScope);
 		
-		Symbol returnType = (ClassSymbol) currentScope.resolve(n.getType().toString());
+		// Check return type exists
+		Symbol returnType = currentScope.resolve(n.getType().toString());
 		if (returnType == null)
 			throw new A2SemanticsException("Class not defined: " + n.getType().toString() + ".", n);
 			
 		if (!(returnType instanceof ClassSymbol))
-			throw new A2SemanticsException("Invalid use of symbol, this should only be a class or primitive.", n);
-		
+			throw new A2SemanticsException("Invalid use of symbol, this should only be a class or primitive.", n);		
 		methodSymbol.setReturnType((ClassSymbol) returnType);
+		
+		// Check that the parameters have been defined
+		for (Parameter p : n.getParameters()) {
+			Symbol s = currentScope.resolve(p.getType().toString());
+			if (s == null)
+				throw new A2SemanticsException("Class not defined: " + p.getType().toString() + ".", p);
+			if (!(s instanceof ClassSymbol))
+				throw new A2SemanticsException("Invalid use of symbol, this should only be a class or primitive.", p);
+		}
 				
 		currentScope.define(methodSymbol);
 		// create a new MethodSymbol scope and define it in the current scope
