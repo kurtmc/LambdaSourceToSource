@@ -149,6 +149,12 @@ public final class CreateClassScopesVisitor implements VoidVisitor<Object> {
 		data.setScope(currentScope);
 		n.setData(data);
 		
+		// Accept the imports
+		if (n.getImports() != null)
+			for (ImportDeclaration i : n.getImports()) {
+				i.accept(this, arg);
+			}
+		
 		for (TypeDeclaration i : n.getTypes()) {
 			i.accept(this, arg);
 		}				
@@ -162,8 +168,8 @@ public final class CreateClassScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(ImportDeclaration n, Object arg) {
-
-		
+		// Define the import class
+		currentScope.define(new ClassSymbol(n.getName().getName(), currentScope));
 	}
 
 	@Override
