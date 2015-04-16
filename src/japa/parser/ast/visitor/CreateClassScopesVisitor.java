@@ -112,7 +112,8 @@ import se701.symtab.Scope;
 import se701.symtab.SemanticData;
 
 /**
- * The goal of this vistor is to define all of the classes and create scopes for them.
+ * This visitor defines all the primitive classes, defines imported classes in
+ * the global scope, and defines declared classes
  */
 
 public final class CreateClassScopesVisitor implements VoidVisitor<Object> {
