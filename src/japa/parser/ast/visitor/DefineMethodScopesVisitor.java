@@ -208,12 +208,12 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 	public void visit(MethodDeclaration n, Object arg) {
 		SemanticData data = (SemanticData) n.getData();
 		
-		Scope thisMethodsScope = data.getScope();
+		Scope enclosingScope = data.getScope();
 		
-		MethodSymbol methodSymbol = new MethodSymbol(n.getName(), thisMethodsScope);
+		MethodSymbol methodSymbol = new MethodSymbol(n.getName(), enclosingScope);
 		
 		// Check return type exists
-		Symbol returnType = thisMethodsScope.resolve(n.getType().toString());
+		Symbol returnType = enclosingScope.resolve(n.getType().toString());
 		if (returnType == null)
 			throw new A2SemanticsException("Class not defined: " + n.getType().toString() + ".", n);
 			
@@ -223,14 +223,14 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 		
 		// Check that the parameters have been defined
 		for (Parameter p : n.getParameters()) {
-			Symbol s = thisMethodsScope.resolve(p.getType().toString());
+			Symbol s = enclosingScope.resolve(p.getType().toString());
 			if (s == null)
 				throw new A2SemanticsException("Class not defined: " + p.getType().toString() + ".", p);
 			if (!(s instanceof ClassSymbol))
 				throw new A2SemanticsException("Invalid use of symbol, this should only be a class or primitive.", p);
 		}
 				
-		thisMethodsScope.define(methodSymbol);
+		enclosingScope.define(methodSymbol);
 	}
 
 	@Override
