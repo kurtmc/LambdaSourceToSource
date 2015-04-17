@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.visitor.CheckClassExtendsAndImplementsVisitor;
 import japa.parser.ast.visitor.CreateClassScopesVisitor;
 import japa.parser.ast.visitor.DefineMethodScopesVisitor;
 import japa.parser.ast.visitor.SillyBreakVisitor;
@@ -27,6 +28,10 @@ public class A2Compiler {
 		// Create class scopes and define them
 		CreateClassScopesVisitor createScopesVisitor = new CreateClassScopesVisitor();
 		ast.accept(createScopesVisitor, null);
+		
+		// Check class extends
+		CheckClassExtendsAndImplementsVisitor checkClassExtendsAndImplementsVisitor = new CheckClassExtendsAndImplementsVisitor();
+		ast.accept(checkClassExtendsAndImplementsVisitor, null);
 		
 		// Define methods
 		DefineMethodScopesVisitor defineMethodScopesVisitor = new DefineMethodScopesVisitor();
