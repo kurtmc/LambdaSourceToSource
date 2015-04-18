@@ -6,6 +6,7 @@ import se701.symtab.MethodSymbol;
 import se701.symtab.Scope;
 import se701.symtab.SemanticData;
 import se701.symtab.Symbol;
+import se701.symtab.VariableSymbol;
 import japa.parser.ast.BlockComment;
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.ImportDeclaration;
@@ -97,6 +98,8 @@ import japa.parser.ast.type.WildcardType;
  *
  */
 public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
+	
+	private Scope currentScope;
 		
 	@Override
 	public void visit(Node n, Object arg) {
@@ -189,23 +192,22 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(VariableDeclarator n, Object arg) {
-		System.out.println("visit(VariableDeclarator n, Object arg)");
-		n.getId().accept(this, arg);
+		// Create new VariableSymbol
+		VariableSymbol variable = new VariableSymbol(n.getId().getName());
 		
+		// Get variable type
+		ClassSymbol variableType = (ClassSymbol) arg;
+		
+		variable.setType(variableType);		
 		
 		if (n.getInit() instanceof LambdaExpr) {
 			// Something special
 			System.out.println("LAMBDA expression!!!!");
-		} else {
-			n.getInit().accept(this, arg);
-		}
-		
+		}		
 	}
 
 	@Override
 	public void visit(VariableDeclaratorId n, Object arg) {
-		System.out.println(n.getName());
-		
 	}
 
 	@Override
@@ -216,9 +218,18 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(MethodDeclaration n, Object arg) {
+		SemanticData data = (SemanticData) n.getData();
+		if (data == null)
+			throw new A2SemanticsException("How can a method now have a scope");
+		
+		currentScope = data.getScope();
+		
 		// Accept method body
 		if (n.getBody() != null)
 			n.getBody().accept(this, arg);
+		
+		// pop the scope
+		currentScope = currentScope.getEnclosingScope();
 	}
 
 	@Override
@@ -445,10 +456,15 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(VariableDeclarationExpr n, Object arg) {
-		System.out.println("VariableDeclarationExpr type: " + n.getType());
+		// Accept the variables, passing in their types
+		Symbol type = currentScope.resolve(n.getType().toString());
+		if (type == null)
+			throw new A2SemanticsException("Could not resolve type " + n.getType().toString() + ".", n);
+		else if (!(type instanceof ClassSymbol))
+			throw new A2SemanticsException(n.getType().toString() + " is not a valid type.", n);
+		
 		for (VariableDeclarator i : n.getVars()) {
-			i.accept(this, arg);
-
+			i.accept(this, type);
 		}		
 	}
 
