@@ -192,22 +192,17 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(VariableDeclarator n, Object arg) {
-		// Create new VariableSymbol
-		VariableSymbol variable = new VariableSymbol(n.getId().getName());
-		
 		// Get variable type
-		ClassSymbol variableType = (ClassSymbol) arg;
-		
-		variable.setType(variableType);		
-		
-		if (n.getInit() instanceof LambdaExpr) {
-			// Something special
-			System.out.println("LAMBDA expression!!!!");
-		}		
+		ClassSymbol variableType = (ClassSymbol) arg;		
+        n.getId().accept(this, variableType);
 	}
 
 	@Override
 	public void visit(VariableDeclaratorId n, Object arg) {
+		// Create new VariableSymbol
+		VariableSymbol variable = new VariableSymbol(n.getName());
+		variable.setType((ClassSymbol) arg);
+		currentScope.define(variable);
 	}
 
 	@Override
