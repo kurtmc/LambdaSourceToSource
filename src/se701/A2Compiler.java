@@ -12,7 +12,6 @@ import japa.parser.ast.visitor.CheckClassExtendsAndImplementsVisitor;
 import japa.parser.ast.visitor.CreateClassScopesVisitor;
 import japa.parser.ast.visitor.DefineMethodScopesVisitor;
 import japa.parser.ast.visitor.DefineVariableScopesVisitor;
-import japa.parser.ast.visitor.SillyBreakVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
 
 public class A2Compiler {
@@ -41,12 +40,6 @@ public class A2Compiler {
 		// Define variables
 		DefineVariableScopesVisitor defineVariableScopesVisitor = new DefineVariableScopesVisitor();
 		ast.accept(defineVariableScopesVisitor, null);
-		
-		
-		
-		// perform visit 1...
-		//SillyBreakVisitor semanticsVisitor = new SillyBreakVisitor();
-		//ast.accept(semanticsVisitor, null);
 		
 		// perform visit 2... etc etc 
 		// ...
