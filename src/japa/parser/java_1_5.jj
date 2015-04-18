@@ -2158,6 +2158,8 @@ Expression PrimaryPrefix():
 	  			: new FieldAccessExpr(line, column, ret, null, name);
 	  	}
 	|
+	  LOOKAHEAD(LambdaExpression()) ret = LambdaExpression()
+	|
 	  "(" {line=token.beginLine; column=token.beginColumn;} ret = Expression() ")" { ret = new EnclosedExpr(line, column, ret); }
 	|
 	  ret = AllocationExpression(null)
