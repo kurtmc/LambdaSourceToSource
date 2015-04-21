@@ -13,6 +13,7 @@ import japa.parser.ast.visitor.CreateClassScopesVisitor;
 import japa.parser.ast.visitor.DefineMethodScopesVisitor;
 import japa.parser.ast.visitor.DefineVariableScopesVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
+import japa.parser.ast.visitor.LambdaTypeResolverVisitor;
 
 public class A2Compiler {
 	
@@ -40,6 +41,10 @@ public class A2Compiler {
 		// Define variables
 		DefineVariableScopesVisitor defineVariableScopesVisitor = new DefineVariableScopesVisitor();
 		ast.accept(defineVariableScopesVisitor, null);
+		
+		// Determine the type of lambdas
+		LambdaTypeResolverVisitor lambdaTypeResolverVisitor = new LambdaTypeResolverVisitor();
+		ast.accept(lambdaTypeResolverVisitor, null);
 		
 		// perform visit 2... etc etc 
 		// ...

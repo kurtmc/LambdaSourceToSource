@@ -79,6 +79,7 @@ import japa.parser.ast.stmt.ForeachStmt;
 import japa.parser.ast.stmt.IfStmt;
 import japa.parser.ast.stmt.LabeledStmt;
 import japa.parser.ast.stmt.ReturnStmt;
+import japa.parser.ast.stmt.Statement;
 import japa.parser.ast.stmt.SwitchEntryStmt;
 import japa.parser.ast.stmt.SwitchStmt;
 import japa.parser.ast.stmt.SynchronizedStmt;
@@ -93,10 +94,12 @@ import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 
 /**
- * This visitor defines methods, checking that return types and method parameters have been defined.
+ * This visitor tells the lambda nodes what type they are, and what method name it implements
  *
  */
-public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
+public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
+	
+	private Scope currentScope;
 		
 	@Override
 	public void visit(Node n, Object arg) {
@@ -142,10 +145,15 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+		
+		currentScope = ((SemanticData) n.getData()).getScope();
+		
 		// Accept the body
 		for (BodyDeclaration i : n.getMembers()) {
 			i.accept(this, arg);
 		}
+		
+		currentScope.getEnclosingScope();
 	}
 
 	@Override
@@ -190,13 +198,21 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 	@Override
 	public void visit(VariableDeclarator n, Object arg) {
 		
+		Symbol variable = currentScope.resolve(n.getId().toString());
 		
+		if (variable == null)
+			throw new A2SemanticsException("Could not resolve " + n.getId().toString() + ".", n.getId());
+		if (!(variable instanceof VariableSymbol))
+			throw new A2SemanticsException(n.getId().toString() + " is not a variable", n.getId());
+		        
+		// Accept initialiser passing in ClassSymbol
+        if (n.getInit() != null)
+        	n.getInit().accept(this, ((VariableSymbol)variable).getType());
+        	
 	}
 
 	@Override
 	public void visit(VariableDeclaratorId n, Object arg) {
-		
-		
 	}
 
 	@Override
@@ -207,38 +223,14 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(MethodDeclaration n, Object arg) {
-		SemanticData data = (SemanticData) n.getData();
 		
-		Scope enclosingScope = data.getScope();
+		currentScope = ((SemanticData) n.getData()).getScope();
 		
-		MethodSymbol methodSymbol = new MethodSymbol(n.getName(), enclosingScope);
+		// Accept method body
+		if (n.getBody() != null)
+			n.getBody().accept(this, arg);
 		
-		// Check return type exists
-		Symbol returnType = enclosingScope.resolve(n.getType().toString());
-		if (returnType == null)
-			throw new A2SemanticsException("Class not defined: " + n.getType().toString() + ".", n);
-			
-		if (!(returnType instanceof ClassSymbol))
-			throw new A2SemanticsException("Invalid use of symbol, this should only be a class or primitive.", n);		
-		methodSymbol.setReturnType((ClassSymbol) returnType);
-		
-		// Check that the parameters have been defined
-		for (Parameter p : n.getParameters()) {
-			Symbol s = enclosingScope.resolve(p.getType().toString());
-			if (s == null)
-				throw new A2SemanticsException("Class not defined: " + p.getType().toString() + ".", p);
-			if (!(s instanceof ClassSymbol))
-				throw new A2SemanticsException("Invalid use of symbol, this should only be a class or primitive.", p);
-			
-			// Create variable symbol to represent parameter
-			VariableSymbol variable = new VariableSymbol(p.getId().toString());
-			variable.setType((ClassSymbol)s);			
-			methodSymbol.define(variable);
-			methodSymbol.addParameter(variable);
-			
-		}
-				
-		enclosingScope.define(methodSymbol);
+		currentScope = currentScope.getEnclosingScope();
 	}
 
 	@Override
@@ -315,8 +307,7 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(AssignExpr n, Object arg) {
-		
-		
+		n.getValue().accept(this, arg);		
 	}
 
 	@Override
@@ -465,8 +456,10 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(VariableDeclarationExpr n, Object arg) {
-		
-		
+		// Accept the variables, passing in their types
+		for (VariableDeclarator i : n.getVars()) {
+			i.accept(this, arg);
+		}		
 	}
 
 	@Override
@@ -495,8 +488,13 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(LambdaExpr n, Object arg) {
+		ClassSymbol lambdaClass = (ClassSymbol) arg;
 		
+		if (lambdaClass.getMethods().size() != 1)
+			throw new A2SemanticsException("Lambdas can only be used to instantiate anonymous classes that implement an interface with one method only.", n);
+		// TODO A whole bunch of other checks
 		
+		n.setData(lambdaClass); // give the lambda node all it's info
 	}
 
 	@Override
@@ -519,7 +517,10 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(BlockStmt n, Object arg) {
-		
+		// Accept statements
+		for (Statement i : n.getStmts()) {
+			i.accept(this, arg);
+		}
 		
 	}
 
@@ -537,8 +538,8 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(ExpressionStmt n, Object arg) {
-		
-		
+		// Accept the expression
+		n.getExpression().accept(this, arg);		
 	}
 
 	@Override

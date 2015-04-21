@@ -1,5 +1,6 @@
 package se701.symtab;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MethodSymbol extends ScopedSymbol {
@@ -12,17 +13,17 @@ public class MethodSymbol extends ScopedSymbol {
 		this.returnType = returnType;
 	}
 
-	public List<ClassSymbol> getParameters() {
+	public List<VariableSymbol> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(List<ClassSymbol> parameters) {
-		this.parameters = parameters;
+	public void addParameter(VariableSymbol parameter) {
+		this.parameters.add(parameter);
 	}
 
 	private ClassSymbol returnType = null;
 
-	private List<ClassSymbol> parameters = null;
+	private List<VariableSymbol> parameters = new ArrayList<>();
 	
 	public MethodSymbol(String name, Scope enclosingScope) {
 		super(name, enclosingScope);

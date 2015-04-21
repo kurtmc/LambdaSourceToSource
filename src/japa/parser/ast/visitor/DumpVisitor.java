@@ -114,6 +114,8 @@ import japa.parser.ast.type.WildcardType;
 import java.util.Iterator;
 import java.util.List;
 
+import se701.symtab.ClassSymbol;
+
 /**
  * @author Julio Vilmar Gesser
  */
@@ -432,10 +434,16 @@ public final class DumpVisitor implements VoidVisitor<Object> {
     }
     
     public void visit(LambdaExpr n, Object arg) {
-    	printer.printLn("new " + n.getTypeString() + "() {");
+    	ClassSymbol lambdaClass = (ClassSymbol) n.getData();
+    	
+    	String className = lambdaClass.getName();
+    	String returnType = lambdaClass.getMethods().get(0).getReturnType().getName();
+    	String methodName = lambdaClass.getMethods().get(0).getName();
+    	
+    	printer.printLn("new " + className + "() {");
 		printer.indent();
     	printer.printLn("@Override");
-    	printer.print("public " + n.getReturnTypeString() + " " + n.getMethodNameString());
+    	printer.print("public " + returnType + " " + methodName);
     	printer.print("(");
         List<Parameter> params = n.getParameters();
         if (params.size() == 0) {
