@@ -525,10 +525,10 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 	@Override
 	public void visit(BlockStmt n, Object arg) {
 		// Accept statements
-		for (Statement i : n.getStmts()) {
-			i.accept(this, arg);
-		}
-		
+		if (n.getStmts() != null)
+			for (Statement i : n.getStmts()) {
+				i.accept(this, arg);
+			}
 	}
 
 	@Override
