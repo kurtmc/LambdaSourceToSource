@@ -1,5 +1,7 @@
 package japa.parser.ast.visitor;
 
+import java.util.List;
+
 import se701.A2SemanticsException;
 import se701.symtab.ClassSymbol;
 import se701.symtab.MethodSymbol;
@@ -490,9 +492,26 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 	public void visit(LambdaExpr n, Object arg) {
 		ClassSymbol lambdaClass = (ClassSymbol) arg;
 		
+		// Check that there is only one method for the interface
 		if (lambdaClass.getMethods().size() != 1)
 			throw new A2SemanticsException("Lambdas can only be used to instantiate anonymous classes that implement an interface with one method only.", n);
-		// TODO A whole bunch of other checks
+		// Check that the lambda parameters match the method parameters
+		List<Parameter> parametersFromNode = n.getParameters();
+		List<VariableSymbol> parametersFromClassMethod = lambdaClass.getMethods().get(0).getParameters();
+		if (parametersFromClassMethod.size() != parametersFromNode.size()) {
+			throw new A2SemanticsException("The number of parameters in the lambda expression is different to the number of methods in the method " + lambdaClass.getMethods().get(0).getName() + " from class " + lambdaClass.getName() + ".", n);
+		}
+		
+		// Check that parameter types and order match
+		for (int i = 0; i < parametersFromNode.size(); i++) {
+			String parameterType = parametersFromNode.get(i).getType().toString();
+			String methodType = parametersFromClassMethod.get(i).getType().getName();
+			if (!parameterType.equals(methodType)) {
+				throw new A2SemanticsException(
+						"The lambda expression parameter types do not match the interfaces method parameters types."
+						+ " It was of type " + parameterType + ", but should have been type " + methodType + ".", parametersFromNode.get(i));
+			}
+		}
 		
 		n.setData(lambdaClass); // give the lambda node all it's info
 	}
