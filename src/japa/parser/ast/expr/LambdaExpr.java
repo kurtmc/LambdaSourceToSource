@@ -37,20 +37,11 @@ public final class LambdaExpr extends Expression {
     private final List<Parameter> parameters;
     
     private final Statement blockStatement;
-    
-    private final String lambdaType;
-    
-    private final String methodReturnType;
-    
-    private final String methodName;
-
-    public LambdaExpr(int line, int column, List params, Statement block, String lambdaType, String methodReturnType, String methodName) {
+            
+    public LambdaExpr(int line, int column, List params, Statement block) {
         super(line, column);
         parameters = (List<Parameter>) params;
         blockStatement = block;
-        this.lambdaType = lambdaType;
-        this.methodReturnType = methodReturnType;
-        this.methodName = methodName;
     }
 
     @Override
@@ -73,17 +64,5 @@ public final class LambdaExpr extends Expression {
 
 	public String getContent() {
 		return null;
-	}
-
-	public String getTypeString() {
-		return lambdaType;
-	}
-
-	public String getReturnTypeString() {
-		return methodReturnType;
-	}
-
-	public String getMethodNameString() {
-		return methodName;
 	}
 }
