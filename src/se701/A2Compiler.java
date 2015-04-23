@@ -46,10 +46,6 @@ public class A2Compiler {
 		LambdaTypeResolverVisitor lambdaTypeResolverVisitor = new LambdaTypeResolverVisitor();
 		ast.accept(lambdaTypeResolverVisitor, null);
 		
-		// perform visit 2... etc etc 
-		// ...
-		
-		// perform visit N 
 		DumpVisitor printVisitor = new DumpVisitor();
 		ast.accept(printVisitor, null);
 		
