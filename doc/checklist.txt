@@ -1,7 +1,7 @@
 # Feature specific
-- lambdas can be used in initializers for fields and variables
+DONE- lambdas can be used in initializers for fields and variables
 (e.g. X x = () -> { ... };)
-- lambdas can be used in assignments for fields and variables
+DONE- lambdas can be used in assignments for fields and variables
 (e.g. X x; x = () -> { ... };)
 - lambdas can be used as method arguments
 (e.g. testMethod(() -> { ... }, 1, "String");

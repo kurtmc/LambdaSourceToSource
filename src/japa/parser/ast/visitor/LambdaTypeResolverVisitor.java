@@ -45,6 +45,7 @@ import japa.parser.ast.expr.ClassExpr;
 import japa.parser.ast.expr.ConditionalExpr;
 import japa.parser.ast.expr.DoubleLiteralExpr;
 import japa.parser.ast.expr.EnclosedExpr;
+import japa.parser.ast.expr.Expression;
 import japa.parser.ast.expr.FieldAccessExpr;
 import japa.parser.ast.expr.InstanceOfExpr;
 import japa.parser.ast.expr.IntegerLiteralExpr;
@@ -110,6 +111,7 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(CompilationUnit n, Object arg) {
+		currentScope = ((SemanticData)n.getData()).getScope();
 		for (TypeDeclaration i : n.getTypes()) {
 			i.accept(this, arg);
 		}
@@ -416,8 +418,23 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(MethodCallExpr n, Object arg) {
-		
-		
+		// lambdas can be passed as method arguments
+		for (int i = 0; i < n.getArgs().size(); i++) {
+			if (n.getArgs().get(i) instanceof LambdaExpr) {
+				
+				// If this is a method invocation on an object, we need that variable so we can get the scope
+				Symbol symbol = currentScope.resolve(n.getScope().toString());
+				// TODO null and instanceof checks
+				ClassSymbol classSymbol = ((VariableSymbol)symbol).getType();
+				// TODO null checks
+				Symbol method = classSymbol.resolve(n.getName());
+				// TODO null and instanceof checks				
+				ClassSymbol lambdaClass = ((MethodSymbol)method).getParameters().get(i).getType();
+
+				n.getArgs().get(i).accept(this, lambdaClass);
+			}
+		}
+
 	}
 
 	@Override
@@ -428,8 +445,7 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(ObjectCreationExpr n, Object arg) {
-		
-		
+		// Ignore
 	}
 
 	@Override

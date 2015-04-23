@@ -2,18 +2,27 @@ package se701;
 
 public class StudentSample {
 
-	
-	interface Addition {
-		int sum(int a, int b);
-	}
-	
-	static Addition addition;
-	
-	public static void main (String[] args) {
-		addition = (int a, int b) -> {
-			return a + b;
-		};
-	
-		System.out.println(addition.sum(2, 5));
-	}
+    interface Addition {
+        int sum(int a, int b);
+    }
+
+    public static void main(String[] args) {
+    	StudentSample s = new StudentSample();
+    	TestReturnAndParameter t = s.new TestReturnAndParameter();
+    	
+    	t.testParamter((int a, int b) -> { return a + b; }, 1, 2);
+    }
+    
+    class TestReturnAndParameter {
+    	
+    	int testParamter(Addition addition, int a, int b) {
+    		return addition.sum(a, b);
+    	}
+
+    	
+//    	Addition testReturn() {
+//    		return (int a, int b) -> { return a + b; };
+//    	}
+    }
 }
+		
