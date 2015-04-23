@@ -145,6 +145,8 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+		currentScope = ((SemanticData) n.getData()).getScope();
+		
 		// Accept the body
 		for (BodyDeclaration i : n.getMembers()) {
 			i.accept(this, arg);
@@ -153,6 +155,8 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(EnumDeclaration n, Object arg) {
+		currentScope = ((SemanticData) n.getData()).getScope();
+		
 		// Accept the body
 		if (n.getMembers() != null)
 			for (BodyDeclaration i : n.getMembers()) {
@@ -186,8 +190,16 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(FieldDeclaration n, Object arg) {
+		// Define fields as well
+		System.out.println("Scope is: " + currentScope.getScopeName());
+		Symbol fieldType = currentScope.resolve(n.getType().toString());
+		if (fieldType == null)
+			throw new A2SemanticsException("Could not resolve type " + n.getType().toString() + ".", n);
+		else if (!(fieldType instanceof ClassSymbol))
+			throw new A2SemanticsException(n.getType().toString() + " is not a valid type.", n);
 		
-		
+		for (VariableDeclarator v : n.getVariables())
+			v.accept(this, fieldType);		
 	}
 
 	@Override

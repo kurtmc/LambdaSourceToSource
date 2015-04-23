@@ -193,8 +193,9 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(FieldDeclaration n, Object arg) {
-		
-		
+		// Accept fields as they can contain lambdas
+		for (VariableDeclarator v : n.getVariables())
+			v.accept(this, arg);		
 	}
 
 	@Override
@@ -490,6 +491,7 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(LambdaExpr n, Object arg) {
+		System.out.println("LAMBDA!!!!!!!!!!!!!!!!!!");
 		ClassSymbol lambdaClass = (ClassSymbol) arg;
 		
 		// Check that there is only one method for the interface
