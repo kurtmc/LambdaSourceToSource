@@ -421,15 +421,21 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 		// lambdas can be passed as method arguments
 		for (int i = 0; i < n.getArgs().size(); i++) {
 			if (n.getArgs().get(i) instanceof LambdaExpr) {
-				
-				// If this is a method invocation on an object, we need that variable so we can get the scope
-				Symbol symbol = currentScope.resolve(n.getScope().toString());
-				// TODO null and instanceof checks
-				ClassSymbol classSymbol = ((VariableSymbol)symbol).getType();
-				// TODO null checks
-				Symbol method = classSymbol.resolve(n.getName());
-				// TODO null and instanceof checks				
-				ClassSymbol lambdaClass = ((MethodSymbol)method).getParameters().get(i).getType();
+				ClassSymbol lambdaClass;
+				if (currentScope.resolve(n.getName()) != null) {
+					Symbol method = currentScope.resolve(n.getName());
+					// TODO null and instanceof checks				
+					lambdaClass = ((MethodSymbol)method).getParameters().get(i).getType();
+				} else {
+					// If this is a method invocation on an object, we need that variable so we can get the scope
+					Symbol symbol = currentScope.resolve(n.getScope().toString());
+					// TODO null and instanceof checks
+					ClassSymbol classSymbol = ((VariableSymbol)symbol).getType();
+					// TODO null checks
+					Symbol method = classSymbol.resolve(n.getName());
+					// TODO null and instanceof checks				
+					lambdaClass = ((MethodSymbol)method).getParameters().get(i).getType();
+				}				
 
 				n.getArgs().get(i).accept(this, lambdaClass);
 			}
@@ -559,10 +565,10 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 	@Override
 	public void visit(BlockStmt n, Object arg) {
 		// Accept statements
-		for (Statement i : n.getStmts()) {
-			i.accept(this, arg);
-		}
-		
+		if (n.getStmts() != null)
+			for (Statement i : n.getStmts()) {
+				i.accept(this, arg);
+			}
 	}
 
 	@Override
