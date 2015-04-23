@@ -310,7 +310,12 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(AssignExpr n, Object arg) {
-		n.getValue().accept(this, arg);		
+		Symbol variable = currentScope.resolve(n.getTarget().toString());
+		if (variable == null)
+			throw new A2SemanticsException("Could not resolve variable " + n.getTarget() + ".", n.getTarget());
+		if (!(variable instanceof VariableSymbol))
+			throw new A2SemanticsException(n.getTarget() + ". should be a variable or field", n.getTarget());
+		n.getValue().accept(this, ((VariableSymbol)variable).getType());		
 	}
 
 	@Override
@@ -491,7 +496,6 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(LambdaExpr n, Object arg) {
-		System.out.println("LAMBDA!!!!!!!!!!!!!!!!!!");
 		ClassSymbol lambdaClass = (ClassSymbol) arg;
 		
 		// Check that there is only one method for the interface

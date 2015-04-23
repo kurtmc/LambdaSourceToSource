@@ -191,7 +191,6 @@ public class DefineVariableScopesVisitor implements VoidVisitor<Object> {
 	@Override
 	public void visit(FieldDeclaration n, Object arg) {
 		// Define fields as well
-		System.out.println("Scope is: " + currentScope.getScopeName());
 		Symbol fieldType = currentScope.resolve(n.getType().toString());
 		if (fieldType == null)
 			throw new A2SemanticsException("Could not resolve type " + n.getType().toString() + ".", n);
