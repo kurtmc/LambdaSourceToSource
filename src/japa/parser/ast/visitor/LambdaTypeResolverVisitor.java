@@ -424,16 +424,31 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 				ClassSymbol lambdaClass;
 				if (currentScope.resolve(n.getName()) != null) {
 					Symbol method = currentScope.resolve(n.getName());
-					// TODO null and instanceof checks				
+					if (method == null) {
+						throw new A2SemanticsException("Could not resolve " + n.getName() + ".", n);
+					} else if (!(method instanceof MethodSymbol)) {
+						throw new A2SemanticsException(n.getName() + " should be a method.", n);
+					}
 					lambdaClass = ((MethodSymbol)method).getParameters().get(i).getType();
 				} else {
 					// If this is a method invocation on an object, we need that variable so we can get the scope
 					Symbol symbol = currentScope.resolve(n.getScope().toString());
-					// TODO null and instanceof checks
+					if (symbol == null) {
+						throw new A2SemanticsException("Could not resolve " + n.getScope().toString());
+					} else if (!(symbol instanceof VariableSymbol)) {
+						throw new A2SemanticsException("Should be a variable", n.getScope());
+					}
 					ClassSymbol classSymbol = ((VariableSymbol)symbol).getType();
-					// TODO null checks
+					if (classSymbol == null) {
+						throw new A2SemanticsException("Variable should have a type");
+					}
 					Symbol method = classSymbol.resolve(n.getName());
-					// TODO null and instanceof checks				
+					// TODO null and instanceof checks	
+					if (method == null) {
+						throw new A2SemanticsException("Could not resolve " + n);
+					} else if (!(method instanceof MethodSymbol)) {
+						throw new A2SemanticsException("Should be a method", n);
+					}
 					lambdaClass = ((MethodSymbol)method).getParameters().get(i).getType();
 				}				
 
