@@ -9,5 +9,10 @@ all:
 clean:
 	rm -r bin/
 
+declaration:
+	pdflatex -output-directory bin declaration.tex
+	mv bin/declaration.pdf ./
+	
+
 spellcheck:
 	aspell --lang=en_GB --mode=tex check report.tex
