@@ -1,14 +1,9 @@
 package se701;
 
 public class StudentSample {
-	
-	/* Extending Runnable so that my compiler defines a Runnable interface */
-    interface Runnable2 extends Runnable {
-    	void run();
-    }
     
     public static void main(String[] args) {
-    	Runnable2 runnable = () -> { System.out.println("Runnable implemented using a lambda expression!"); };
+    	Runnable runnable = () -> { System.out.println("Runnable implemented using a lambda expression!"); };
     	
     	runnable.run();
     }

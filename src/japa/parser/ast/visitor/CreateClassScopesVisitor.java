@@ -108,6 +108,7 @@ import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 import se701.symtab.ClassSymbol;
 import se701.symtab.JavaxSymbol;
+import se701.symtab.MethodSymbol;
 import se701.symtab.Scope;
 import se701.symtab.SemanticData;
 
@@ -143,6 +144,12 @@ public final class CreateClassScopesVisitor implements VoidVisitor<Object> {
 		
 		// hard code standard library classes
 		currentScope.define(new ClassSymbol("String", currentScope));
+		
+		ClassSymbol runnable = new ClassSymbol("Runnable", currentScope);
+		MethodSymbol run = new MethodSymbol("run", runnable);
+		run.setReturnType((ClassSymbol) currentScope.resolve("void"));
+		runnable.addMethod(run);
+		currentScope.define(runnable);
 
 
 		// set scope into CompilationUnit

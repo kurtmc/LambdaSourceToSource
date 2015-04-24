@@ -542,11 +542,14 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 		// Check that the lambda parameters match the method parameters
 		List<Parameter> parametersFromNode = n.getParameters();
 		List<VariableSymbol> parametersFromClassMethod = lambdaClass.getMethods().get(0).getParameters();
-		if (parametersFromClassMethod.size() != parametersFromNode.size()) {
+		if (parametersFromClassMethod != null 
+				&& parametersFromNode != null 
+				&& parametersFromClassMethod.size() != parametersFromNode.size()) {
 			throw new A2SemanticsException("The number of parameters in the lambda expression is different to the number of methods in the method " + lambdaClass.getMethods().get(0).getName() + " from class " + lambdaClass.getName() + ".", n);
 		}
 		
 		// Check that parameter types and order match
+		if (parametersFromNode != null && parametersFromClassMethod != null)
 		for (int i = 0; i < parametersFromNode.size(); i++) {
 			String parameterType = parametersFromNode.get(i).getType().toString();
 			String methodType = parametersFromClassMethod.get(i).getType().getName();

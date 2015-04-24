@@ -374,6 +374,7 @@ public final class CheckAssignmentTypesVisitor implements VoidVisitor<Object> {
     
     public void visit(LambdaExpr n, Object arg) {
         List<Parameter> params = n.getParameters();
+        if (params != null)
         if (params.size() == 0) {
         } else if (params.size() == 1) {
         	params.get(0).accept(this, arg);

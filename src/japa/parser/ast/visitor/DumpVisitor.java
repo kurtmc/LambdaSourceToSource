@@ -446,6 +446,7 @@ public final class DumpVisitor implements VoidVisitor<Object> {
     	printer.print("public " + returnType + " " + methodName);
     	printer.print("(");
         List<Parameter> params = n.getParameters();
+        if (params != null)
         if (params.size() == 0) {
         } else if (params.size() == 1) {
         	params.get(0).accept(this, arg);
