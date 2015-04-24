@@ -38,8 +38,10 @@ public class A2MainRunner {
 			System.out.println("src/se701.StudentSample compiled correctly");
 		} catch (ParseException e) {
 			System.err.println("Student file should not have any errors! ");
+			e.printStackTrace();
 		} catch (A2SemanticsException e) {
 			System.err.println("Student file should not have any errors! ");
+			e.printStackTrace();
 		}  catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
