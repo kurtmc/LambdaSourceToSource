@@ -9,6 +9,7 @@ import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.visitor.BlankVisitor;
+import japa.parser.ast.visitor.CheckAssignmentTypesVisitor;
 import japa.parser.ast.visitor.CheckClassExtendsAndImplementsVisitor;
 import japa.parser.ast.visitor.CreateClassScopesVisitor;
 import japa.parser.ast.visitor.DefineMethodScopesVisitor;
@@ -48,7 +49,7 @@ public class A2Compiler {
 		ast.accept(lambdaTypeResolverVisitor, null);
 		
 		// Check assignment visitor
-		BlankVisitor checkassignmentVisitor = new BlankVisitor();
+		CheckAssignmentTypesVisitor checkassignmentVisitor = new CheckAssignmentTypesVisitor();
 		ast.accept(checkassignmentVisitor, null);
 		
 		// Final visitor
