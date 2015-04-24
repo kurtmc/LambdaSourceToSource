@@ -10,6 +10,7 @@ public class StudentSample {
     	
     	getNewRunnable().run();
     	
+    	// Lambda in method argument
     	runThis(() -> { System.out.println("Lambda used in method argument"); });
     	
     }
