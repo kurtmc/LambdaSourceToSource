@@ -223,6 +223,7 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 		methodSymbol.setReturnType((ClassSymbol) returnType);
 		
 		// Check that the parameters have been defined
+		if (n.getParameters() != null)
 		for (Parameter p : n.getParameters()) {
 			Symbol s = enclosingScope.resolve(p.getType().toString());
 			if (s == null)
@@ -239,6 +240,9 @@ public class DefineMethodScopesVisitor implements VoidVisitor<Object> {
 		}
 				
 		enclosingScope.define(methodSymbol);
+		
+		// set the correct scope
+		data.setScope(methodSymbol);
 	}
 
 	@Override
