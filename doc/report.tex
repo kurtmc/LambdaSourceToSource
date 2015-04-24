@@ -1,12 +1,14 @@
 \documentclass[twocolumn]{report}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{xcolor}
 \definecolor{javared}{rgb}{0.6,0,0} % for strings
 \definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
 \definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
 \definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
  
 \lstset{language=Java,
+breaklines=true,
 basicstyle=\ttfamily\scriptsize,
 keywordstyle=\color{javapurple}\bfseries,
 stringstyle=\color{javared},
@@ -14,6 +16,7 @@ commentstyle=\color{javagreen},
 morecomment=[s][\color{javadocblue}]{/**}{*/},
 tabsize=4,
 showspaces=false,
+frame=lrtb,
 showstringspaces=false}
 
 \begin{document}
@@ -24,46 +27,36 @@ showstringspaces=false}
 
 \chapter{Introduction}
 An example use of my implementation of lambda expressions in java is to
-instantiate an anonymous class with exactly one method to be overriden. Using
+instantiate an anonymous classes with exactly one method to be overriden. Using
 lambda expressions it makes the code much cleaner and more concise.
 
-For example this code:
+An example use of this would be to instantiate an instance of a Runnable class
+and override the run method.\cite{Ierusalimschy:2007:EL:1238844.1238846}
+
+In the Java standard library there is this interface
 \begin{lstlisting}
-interface Addition {
-  int sum(int a, int b);
-}
-
-public static void main(String[] args) {
-  Addition addition = new Addition() {
-
-    @Override
-    public int sum(int a, int b) {
-      return a + b;
-    }
-  };
-  System.out.println(addition.sum(2, 5));
+interface Runnable {
+  void run();
 }
 \end{lstlisting}
-Would be written more consicely, like this:
+With Java Lambda expressions instatiating an anonymous class in more consice.
+
+No lambda expressions:
 \begin{lstlisting}
-interface Addition {
-  int sum(int a, int b);
-}
-
-public static void main(String[] args) {
-  Addition addition = (int a, int b) -> {
-    return a + b;
-  };
-  System.out.println(addition.sum(2, 5));
-}
+Runnable r = new Runnable() {
+	@Override
+	public void run() {
+		System.out.println("run!");
+	}
+};
+r.run();
 \end{lstlisting}
-More concise:
+Using lambda expression:
 \begin{lstlisting}
-  Addition addition = (int a, int b) -> return a + b;
-  System.out.println(addition.sum(2, 5));
+Runnable r = () -> { System.out.println("run!"); };    	
+r.run();
 \end{lstlisting}
 
-
-
-
+\bibliographystyle{ieeetr}
+\bibliography{references}
 \end{document}
