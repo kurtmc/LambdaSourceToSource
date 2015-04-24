@@ -316,32 +316,6 @@ public final class BlankVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(PrimitiveType n, Object arg) {
-        switch (n.getType()) {
-            case Boolean:
-                
-                break;
-            case Byte:
-                
-                break;
-            case Char:
-                
-                break;
-            case Double:
-                
-                break;
-            case Float:
-                
-                break;
-            case Int:
-                
-                break;
-            case Long:
-                
-                break;
-            case Short:
-                
-                break;
-        }
     }
 
     public void visit(ReferenceType n, Object arg) {
@@ -471,110 +445,11 @@ public final class BlankVisitor implements VoidVisitor<Object> {
     public void visit(AssignExpr n, Object arg) {
         n.getTarget().accept(this, arg);
         
-        switch (n.getOperator()) {
-            case assign:
-                
-                break;
-            case and:
-                
-                break;
-            case or:
-                
-                break;
-            case xor:
-                
-                break;
-            case plus:
-                
-                break;
-            case minus:
-                
-                break;
-            case rem:
-                
-                break;
-            case slash:
-                
-                break;
-            case star:
-                
-                break;
-            case lShift:
-                
-                break;
-            case rSignedShift:
-                
-                break;
-            case rUnsignedShift:
-                
-                break;
-        }
-        
         n.getValue().accept(this, arg);
     }
 
     public void visit(BinaryExpr n, Object arg) {
         n.getLeft().accept(this, arg);
-        
-        switch (n.getOperator()) {
-            case or:
-                
-                break;
-            case and:
-                
-                break;
-            case binOr:
-                
-                break;
-            case binAnd:
-                
-                break;
-            case xor:
-                
-                break;
-            case equals:
-                
-                break;
-            case notEquals:
-                
-                break;
-            case less:
-                
-                break;
-            case greater:
-                
-                break;
-            case lessEquals:
-                
-                break;
-            case greaterEquals:
-                
-                break;
-            case lShift:
-                
-                break;
-            case rSignedShift:
-                
-                break;
-            case rUnsignedShift:
-                
-                break;
-            case plus:
-                
-                break;
-            case minus:
-                
-                break;
-            case times:
-                
-                break;
-            case divide:
-                
-                break;
-            case remainder:
-                
-                break;
-        }
         
         n.getRight().accept(this, arg);
     }
@@ -731,37 +606,8 @@ public final class BlankVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(UnaryExpr n, Object arg) {
-        switch (n.getOperator()) {
-            case positive:
-                
-                break;
-            case negative:
-                
-                break;
-            case inverse:
-                
-                break;
-            case not:
-                
-                break;
-            case preIncrement:
-                
-                break;
-            case preDecrement:
-                
-                break;
-        }
 
         n.getExpr().accept(this, arg);
-
-        switch (n.getOperator()) {
-            case posIncrement:
-                
-                break;
-            case posDecrement:
-                
-                break;
-        }
     }
 
     public void visit(ConstructorDeclaration n, Object arg) {
