@@ -2,7 +2,6 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{xcolor}
-%\usepackage{titling}
 \definecolor{javared}{rgb}{0.6,0,0} % for strings
 \definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
 \definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
@@ -12,6 +11,9 @@
 \usepackage{etoolbox}
 \patchcmd{\thebibliography}{\chapter*}{\section*}{}{}
 \renewcommand\bibname{References}
+
+% No indentation
+\setlength\parindent{0pt}
  
 \lstset{language=Java,
 breaklines=true,
@@ -30,25 +32,27 @@ showstringspaces=false}
 \author{Kurt McAlpine}
 \date{24 April 2015}
 \maketitle
-%\thispagestyle{empty}
 
 \section*{Introduction}
+For this assignment I have decided to implement a feature similar to Java 8
+lambda expressions. These expressions are used in place of anonymous class
+instantiations.
+
 An example use of my implementation of lambda expressions in java is to
-instantiate an anonymous classes with exactly one method to be overriden. Using
-lambda expressions it makes the code much cleaner and more concise.
+instantiate an anonymous classes with exactly one method to be overridden. Using
+lambda expressions it makes the code much cleaner and more
+concise.\cite{Ierusalimschy:2007:EL:1238844.1238846}
 
-An example use of this would be to instantiate an instance of a Runnable class
-and override the run method.\cite{Ierusalimschy:2007:EL:1238844.1238846}
+The following is an example use of my implementation of lambda expressions.
 
-In the Java standard library there is this interface
+In the Java standard library there is this interface:
 \begin{lstlisting}
 interface Runnable {
   void run();
 }
 \end{lstlisting}
-With Java Lambda expressions instatiating an anonymous class in more consice.
 
-No lambda expressions:
+Instantiating an anonymous instance of Runnable:
 \begin{lstlisting}
 Runnable r = new Runnable() {
 	@Override
@@ -58,11 +62,17 @@ Runnable r = new Runnable() {
 };
 r.run();
 \end{lstlisting}
-Using lambda expression:
+Now using lambda expression:
 \begin{lstlisting}
 Runnable r = () -> { System.out.println("run!"); };    	
 r.run();
 \end{lstlisting}
+
+The syntax of a lambda expression starts with a list of parameters in
+parenthesis, for example: {\ttfamily(int a, int b, String s)} , followed by a
+new keyword ``{\ttfamily->}'' and then a series of statements surrounded by
+braces. In the about example only one statement is used but there may be
+multiple statements inside the braces.
 
 \section*{Why java lambda expressions are important}
 
