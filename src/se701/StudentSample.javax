@@ -7,10 +7,11 @@ public class StudentSample {
     }
 
     public static void main(String[] args) {
-		testParamter((int a, int b) -> { return a + b; }, 1, 2);
+		Addition a = testReturn();
     }
     
-    static void testParamter(Addition a, int b, int c) {
+    static Addition testReturn() {
+    	return (int a, int b) -> { return a + b; };
     }
     
 }

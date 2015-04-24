@@ -419,6 +419,7 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 	@Override
 	public void visit(MethodCallExpr n, Object arg) {
 		// lambdas can be passed as method arguments
+		if (n.getArgs() != null)
 		for (int i = 0; i < n.getArgs().size(); i++) {
 			if (n.getArgs().get(i) instanceof LambdaExpr) {
 				ClassSymbol lambdaClass;
@@ -624,8 +625,15 @@ public class LambdaTypeResolverVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(ReturnStmt n, Object arg) {
-		
-		
+		// Accept lambdas in return statements
+		if (n.getExpr() instanceof LambdaExpr) {
+			Symbol method = (Symbol) currentScope;
+			if (!(method instanceof MethodSymbol)) {
+				throw new A2SemanticsException("Show how returning in a place that is not a method", n);
+			}
+			ClassSymbol lambdaClass =  ((MethodSymbol)method).getReturnType();
+			n.getExpr().accept(this, lambdaClass);
+		}
 	}
 
 	@Override
