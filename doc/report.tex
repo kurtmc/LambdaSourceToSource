@@ -1,11 +1,17 @@
-\documentclass[twocolumn]{report}
+\documentclass[twocolumn,notitlepage]{report}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{xcolor}
+%\usepackage{titling}
 \definecolor{javared}{rgb}{0.6,0,0} % for strings
 \definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
 \definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
 \definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+% Change bibliography style
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\chapter*}{\section*}{}{}
+\renewcommand\bibname{References}
  
 \lstset{language=Java,
 breaklines=true,
@@ -24,8 +30,9 @@ showstringspaces=false}
 \author{Kurt McAlpine}
 \date{24 April 2015}
 \maketitle
+%\thispagestyle{empty}
 
-\chapter{Introduction}
+\section*{Introduction}
 An example use of my implementation of lambda expressions in java is to
 instantiate an anonymous classes with exactly one method to be overriden. Using
 lambda expressions it makes the code much cleaner and more concise.
