@@ -3,8 +3,23 @@ package se701;
 public class StudentSample {
     
     public static void main(String[] args) {
-    	Runnable runnable = () -> { System.out.println("Runnable implemented using a lambda expression!"); };
-    	
+    
+    	// Lambda in variable assignment
+    	Runnable runnable = () -> { System.out.println("Lambda used in variable assignment"); };    	
     	runnable.run();
+    	
+    	getNewRunnable().run();
+    	
+    	runThis(() -> { System.out.println("Lambda used in method argument"); });
+    	
+    }
+    
+    // Lambda in return statement
+    public static Runnable getNewRunnable() {
+    	return () -> { System.out.println("Runnable in return statement"); };
+    }
+    
+    public static void runThis(Runnable r) {
+    	r.run();
     }
 }
