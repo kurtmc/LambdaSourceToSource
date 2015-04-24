@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.visitor.BlankVisitor;
 import japa.parser.ast.visitor.CheckClassExtendsAndImplementsVisitor;
 import japa.parser.ast.visitor.CreateClassScopesVisitor;
 import japa.parser.ast.visitor.DefineMethodScopesVisitor;
@@ -46,6 +47,11 @@ public class A2Compiler {
 		LambdaTypeResolverVisitor lambdaTypeResolverVisitor = new LambdaTypeResolverVisitor();
 		ast.accept(lambdaTypeResolverVisitor, null);
 		
+		// Check assignment visitor
+		BlankVisitor checkassignmentVisitor = new BlankVisitor();
+		ast.accept(checkassignmentVisitor, null);
+		
+		// Final visitor
 		DumpVisitor printVisitor = new DumpVisitor();
 		ast.accept(printVisitor, null);
 		
