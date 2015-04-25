@@ -42,7 +42,7 @@ instantiations.
 An example use of my implementation of lambda expressions in java is to
 instantiate an anonymous classes with exactly one method to be overridden. Using
 lambda expressions it makes the code much cleaner and more
-concise.
+concise.\cite{website:love-and-hate-for-java-8}
 
 The following is an example use of my implementation of lambda expressions.
 
@@ -133,8 +133,54 @@ behaviour as a paramter using lambdas.
 
 \subsection*{Lambda expression implementation}
 \subsubsection*{Symbol table}
-\subsubsection*{Which nodes this affects}
+For my symbol table I have a Scope interface, a Symbol abstract class and an
+abstract class ScopedSymbol that extends Scope. I have three classes that extend ScopedSymbol, the first
+is JavaxSymbol that represents the global scope of the javax file, there is no enclosing scope for the JavaxSymbol. Defined in JavaxSymbol's HashMap are ClassSymbols. ClassSymbols also have a method for getting a list of methods that it contains which is important for figuring out what method lambda expressions implement. Defined inside ClassSymbols would be MethodSymbols and VariableSymbols. MethodSymbols are also
+ScopedSymbols so inside MethodSymbols VariableSymbols are defined.
+
+A2Compiler runs the following visitors on the AST:
+\begin{itemize}
+\item CreateClassScopesVisitor
+\item CheckClassExtendsAndImplementsVisitor
+\item DefineMethodScopesVisitor
+\item DefineVariableScopesVisitor
+\item LambdaTypeResolverVisitor
+\item CheckAssignmentTypesVisitor
+\item DumbVisitor
+\end{itemize}
+CreateClassScopesVisitor initially defines the global scope, then goes on the
+define all the primitive types and some standard library types, it then goes
+through the ast visiting class definitions and defining them inside the global
+scope.\\
+CheckClassExtendsAndImplementsVisitor goes through the AST checking that the
+classes defined in the javax file extend and implement classes that are in
+scope.\\
+DefineMethodScopesVisitor goes throught the AST defining MethodSymbols in the
+correct scope and checks that the method parameters and return type are in
+scope.\\
+DefineVariableScopesVisitor goes through and defines VariableSymbols the fields
+and variables inside classes.\\
+LambdaTypeResolverVisitor goes through the AST finding LambdaExpr nodes and
+sets their data to be the class the lambda expression is implementing. This is
+the most interesting visitor out of all the ones I implemented, it needs to
+infer the type based on how the lambda is used. So the lambda could be used as
+a variable initialiser for a field or variable. It could be used as an argument
+to a method or it could be used as a return value. This visitor figures out the
+type for all of those cases and adds that information the the LambdaExpr node
+to be used later in the DumpVisior.\\
+CheckAssignmentTypesVisitor finds assignment expressions and checks that the
+left sides type is compatible with the expression on the right side. This
+visitor is restricted to primitive type literals due to time constraints.  So
+this visitor will check to see if the left side is compatible with the
+following literals IntegerLiteralExpr, DoubleLiteralExpr, BooleanLiteralExpr,
+CharLiteralExpr and StringLiteralExpr.
+
 \subsection*{Challenges I faced}
+The most challenging aspect of this assignmnet was to implement
+LambdaTypeResolverVisitor, it required resolving the type of the lambda
+expression in several use cases that were difficult to get right, it also
+required me to make further modifications to the jj file after the initial
+changes as I has missed some use cases of the lambda expression.
 
 
 \bibliographystyle{IEEEtran}
