@@ -40,13 +40,13 @@ lambda expressions. These expressions are used in place of anonymous class
 instantiations.
 
 An example use of my implementation of lambda expressions in java is to
-instantiate an anonymous classes with exactly one method to be overridden. Using
-lambda expressions it makes the code much cleaner and more
+instantiate an anonymous class with exactly one method to be overridden. By
+lambda expressions, it makes the code much cleaner and more
 concise.\cite{website:love-and-hate-for-java-8}
 
 The following is an example use of my implementation of lambda expressions.
 
-In the Java standard library there is this interface:
+In the Java standard library there is the following interface:
 \begin{lstlisting}
 interface Runnable {
   void run();
@@ -70,21 +70,22 @@ r.run();
 \end{lstlisting}
 
 The syntax of a lambda expression starts with a list of parameters in
-parenthesis, for example: {\ttfamily(int a, int b, String s)} , followed by a
+parenthesis. For example: {\ttfamily(int a, int b, String s)} , followed by a
 new keyword ``{\ttfamily->}'' and then a series of statements surrounded by
-braces. In the about example only one statement is used but there may be
+braces. In the above example only one statement is used but there may be
 multiple statements inside the braces.
 
-\section*{Why java lambda expressions are important}
+\section*{Why Java Lambda Expressions are Important}
 Currently (in Java 1.7 and below) programmers need to write a large amount of
 boiler plate code to instantiate an anonymous class. It takes around 3 lines to
 create an anonymous instance of Runnable that overrides the run() method with a
 method body of just one line. There is clearly a need for improvement.
 
-\section*{How lambda expressions address the problematic issues that programmers face}
-An example of a piece of java code that requires a lot of boiler plate code is
-in Android development, when you are attaching a click listener to a view such
-as a button. So you may have some code that looks like this:
+\section*{How Lambda Expressions Address the Problematic Issues that Programmers Face}
+An example of a piece of Java code that requires a lot of boiler plate code is
+in Android development. This can be exemplified when you are attaching a click
+listener to a view such as a button. Therefore, you may have some code that
+looks like this:
 \begin{lstlisting}
 Button myButton = (Button) findViewById(R.id.my_button);
 myButton.setOnClickListener(
@@ -95,9 +96,9 @@ new View.OnClickListener() {
 	}
 });
 \end{lstlisting}
-But using lambda expressions we can make this code less verbose and therefore
-more readable and concise. Here is the above code rewritten to use lambda
-expressions.
+However, through using lambda expressions we can make this code less verbose
+and therefore more readable and concise. Here is the above code rewritten to
+use lambda expressions:
 \newpage
 \begin{lstlisting}
 Button myButton = (Button) findViewById(R.id.my_button);
@@ -106,7 +107,7 @@ myButton.setOnClickListener((View v) -> {
 });
 \end{lstlisting}
 
-\subsection*{How does it help developers write better code?}
+\subsection*{How Does it Help Developers Write Better Code?}
 Combining this Java feature with standard library code can provide developers a powerful syntax 
 that is more concise and readable. For example you could have an interface such as this:
 \begin{lstlisting}
@@ -114,9 +115,9 @@ interface Consumer {
 	void accept(Object o);
 }
 \end{lstlisting}
-And for the {\ttfamily List} interface you had a method {\ttfamily void
-forEach(Consumer c)}.  And if you wanted to perform an action on each element
-in a list you could use a lambda expression in the following way:
+further, for the {\ttfamily List} interface you had a method {\ttfamily void
+forEach(Consumer c)}.  Following this, if you wanted to perform an action on
+each element in a list you could use a lambda expression in the following way:
 \begin{lstlisting}
 // Print elements using lambda
 listOfNumbers.forEach((Object o) -> System.out.println(o));
@@ -127,16 +128,25 @@ for (Object o : listOfNumbers) {
 }
 \end{lstlisting}
 The first way of printing the listOfNumbers is a good example of passing a
-behaviour as a parameter using lambdas.
-\cite{website:why-we-need-lambda-expressions-in-java}
+behaviour as a parameter using
+lambdas.\cite{website:why-we-need-lambda-expressions-in-java}\\
+
+In general the use of lambdas as a sort hand or instantiating anonymous classes
+that implement just one method reduces the amount of code developers have to
+write, make it more concise and therefore increases the readablity of code.
 
 
-\subsection*{Lambda expression implementation}
+\subsection*{Lambda Expression Implementation}
 \subsubsection*{Symbol table}
-For my symbol table I have a Scope interface, a Symbol abstract class and an
-abstract class ScopedSymbol that extends Scope. I have three classes that extend ScopedSymbol, the first
-is JavaxSymbol that represents the global scope of the javax file, there is no enclosing scope for the JavaxSymbol. Defined in JavaxSymbol's HashMap are ClassSymbols. ClassSymbols also have a method for getting a list of methods that it contains which is important for figuring out what method lambda expressions implement. Defined inside ClassSymbols would be MethodSymbols and VariableSymbols. MethodSymbols are also
-ScopedSymbols so inside MethodSymbols VariableSymbols are defined.
+For my symbol table, I have a Scope interface, a Symbol abstract class and an
+abstract class ScopedSymbol that extends Scope. I have three classes that
+extend ScopedSymbol. The first is JavaxSymbol that represents the global scope
+of the javax file. There is no enclosing scope for the JavaxSymbol.
+ClassSymbols are defined in JavaxSymbol's HashMap. ClassSymbols also have a
+method for getting a list of methods that it contains. This is important for
+figuring out what method lambda expressions implement.  MethodSymbols and
+VariableSymbols are defined inside ClassSymbols.  MethodSymbols are also
+ScopedSymbols. Therefore inside MethodSymbols VariableSymbols are defined.
 
 A2Compiler runs the following visitors on the AST:
 \begin{itemize}
@@ -148,8 +158,8 @@ A2Compiler runs the following visitors on the AST:
 \item CheckAssignmentTypesVisitor
 \item DumbVisitor
 \end{itemize}
-CreateClassScopesVisitor initially defines the global scope, then goes on the
-define all the primitive types and some standard library types, it then goes
+CreateClassScopesVisitor initially defines the global scope, then goes on to
+define all the primitive types and some standard library types. It then goes
 through the AST visiting class definitions and defining them inside the global
 scope.\\
 CheckClassExtendsAndImplementsVisitor goes through the AST checking that the
@@ -162,12 +172,12 @@ DefineVariableScopesVisitor goes through and defines VariableSymbols the fields
 and variables inside classes.\\
 LambdaTypeResolverVisitor goes through the AST finding LambdaExpr nodes and
 sets their data to be the class the lambda expression is implementing. This is
-the most interesting visitor out of all the ones I implemented, it needs to
-infer the type based on how the lambda is used. So the lambda could be used as
-a variable initialiser for a field or variable. It could be used as an argument
+the most interesting visitor out of all the ones I implemented as it needs to
+infer the type based on how the lambda is used. Therefore the lambda could be used as
+a variable initialiser for a field or variable. It could also be used as an argument
 to a method or it could be used as a return value. This visitor figures out the
-type for all of those cases and adds that information the the LambdaExpr node
-to be used later in the DumpVisior.\\
+type for all of those cases and adds that information to the LambdaExpr node
+to be used later in the DumpVisitor.\\
 CheckAssignmentTypesVisitor finds assignment expressions and checks that the
 left sides type is compatible with the expression on the right side. This
 visitor is restricted to primitive type literals due to time constraints.  So
@@ -175,10 +185,10 @@ this visitor will check to see if the left side is compatible with the
 following literals IntegerLiteralExpr, DoubleLiteralExpr, BooleanLiteralExpr,
 CharLiteralExpr and StringLiteralExpr.
 
-\subsection*{Challenges I faced}
+\subsection*{Challenges I Faced}
 The most challenging aspect of this assignment was to implement
 LambdaTypeResolverVisitor, it required resolving the type of the lambda
-expression in several use cases that were difficult to get right, it also
+expression in several use cases which were difficult to get right. It also
 required me to make further modifications to the jj file after the initial
 changes as I has missed some use cases of the lambda expression.
 
