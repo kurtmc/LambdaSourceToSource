@@ -1,4 +1,5 @@
 \documentclass[twocolumn,notitlepage]{report}
+\usepackage{hyperref}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{xcolor}
@@ -41,7 +42,7 @@ instantiations.
 An example use of my implementation of lambda expressions in java is to
 instantiate an anonymous classes with exactly one method to be overridden. Using
 lambda expressions it makes the code much cleaner and more
-concise.\cite{Ierusalimschy:2007:EL:1238844.1238846}
+concise.
 
 The following is an example use of my implementation of lambda expressions.
 
@@ -81,13 +82,61 @@ create an anonymous instance of Runnable that overrides the run() method with a
 method body of just one line. There is clearly a need for improvement.
 
 \section*{How lambda expressions address the problematic issues that programmers face}
+An example of a piece of java code that requires a lot of boilder plate code is
+in Android developement, when you are attaching a click listener to a view such
+as a button. So you may have some code that looks like this:
+\begin{lstlisting}
+Button myButton = (Button) findViewById(R.id.my_button);
+myButton.setOnClickListener(
+new View.OnClickListener() {
+	@Override
+	public void onClick(View v) {
+		doAction(v);
+	}
+});
+\end{lstlisting}
+But using lambda expressions we can make this code less verbose and therefore
+more readable and concise. Here is the above code rewritten to use lambda
+expressions.
+\newpage
+\begin{lstlisting}
+Button myButton = (Button) findViewById(R.id.my_button);
+myButton.setOnClickListener((View v) -> {
+	doAction(v);
+});
+\end{lstlisting}
+
 \subsection*{How does it help developers write better code?}
+Combining this Java feature with standard library code can provide developers a powerful syntax 
+that is more concise and readable. For example you could have an interface such as this:
+\begin{lstlisting}
+interface Consumer {
+	void accept(Object o);
+}
+\end{lstlisting}
+And for the {\ttfamily List} interface you had a method {\ttfamily void
+forEach(Consumer c)}.  And if you wanted to perform an action on each element
+in a list you could use a lambda expression in the following way:
+\begin{lstlisting}
+// Print elements using lambda
+listOfNumbers.forEach((Object o) -> System.out.println(o));
+
+// Print elements using for loop
+for (Object o : listOfNumbers) {
+	System.out.println(o);
+}
+\end{lstlisting}
+The first way of printing the listOfNumbers is a good example of passing a
+behaviour as a paramter using lambdas.
+\cite{website:why-we-need-lambda-expressions-in-java}
+
+
 \subsection*{Lambda expression implementation}
 \subsubsection*{Symbol table}
 \subsubsection*{Which nodes this affects}
 \subsection*{Challenges I faced}
 
 
-\bibliographystyle{ieeetr}
+\bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
