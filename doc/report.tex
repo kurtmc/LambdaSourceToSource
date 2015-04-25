@@ -150,12 +150,12 @@ A2Compiler runs the following visitors on the AST:
 \end{itemize}
 CreateClassScopesVisitor initially defines the global scope, then goes on the
 define all the primitive types and some standard library types, it then goes
-through the ast visiting class definitions and defining them inside the global
+through the AST visiting class definitions and defining them inside the global
 scope.\\
 CheckClassExtendsAndImplementsVisitor goes through the AST checking that the
 classes defined in the javax file extend and implement classes that are in
 scope.\\
-DefineMethodScopesVisitor goes throught the AST defining MethodSymbols in the
+DefineMethodScopesVisitor goes through the AST defining MethodSymbols in the
 correct scope and checks that the method parameters and return type are in
 scope.\\
 DefineVariableScopesVisitor goes through and defines VariableSymbols the fields
@@ -176,7 +176,7 @@ following literals IntegerLiteralExpr, DoubleLiteralExpr, BooleanLiteralExpr,
 CharLiteralExpr and StringLiteralExpr.
 
 \subsection*{Challenges I faced}
-The most challenging aspect of this assignmnet was to implement
+The most challenging aspect of this assignment was to implement
 LambdaTypeResolverVisitor, it required resolving the type of the lambda
 expression in several use cases that were difficult to get right, it also
 required me to make further modifications to the jj file after the initial
